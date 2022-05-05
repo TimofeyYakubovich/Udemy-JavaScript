@@ -43,7 +43,15 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Timer
 
-    const deadline = '2022-01-30';
+    // const deadline = '2022-05-05';
+    const deadline = new Date('2078-12-17');
+    const day = new Date();
+    // day.setHours(day.getHours() + (day.getTimezoneOffset()/-60));
+    deadline.setFullYear(day.getFullYear());
+    deadline.setMonth(day.getMonth());
+    deadline.setDate(day.getDate() + 1);
+    console.log(day);
+    console.log(deadline);
 
     function getTimeReamining (endtime) {
         const t = Date.parse(endtime) - Date.parse(new Date()), // разница между дедлайном и текущем временем //
@@ -77,7 +85,7 @@ document.addEventListener('DOMContentLoaded', () => {
               seconds = time.querySelector('#seconds'),
               timeInterval = setInterval(updateClock, 1000);
 
-        updateClock ();
+        updateClock (); // запускаем функцию updateClock не дожидаясь 1000 миллисекунд что бы на странице не появлялись цифры с вёрстки
 
         function updateClock () {
             const t = getTimeReamining(endtime); // в переменную t помещается объект из функции getTimeReamining //

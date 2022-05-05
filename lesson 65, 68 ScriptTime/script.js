@@ -117,4 +117,14 @@ let end = new Date();
 alert(`цикл отработал за ${(end - start)/1000} секунд`);
 
 
+let end1 = new Date();
+console.log(end1);
+console.log(end1.getTimezoneOffset());
+// end1.setHours(end1.getHours() + 1);
+end1.setHours(end1.getHours() + (end1.getTimezoneOffset()/-60));
+let end2 = 24 - end1.getHours();
+console.log(end1);
+console.log(end2);
+
+
 
