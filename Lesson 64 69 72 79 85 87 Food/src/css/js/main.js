@@ -50,8 +50,8 @@ document.addEventListener('DOMContentLoaded', () => {
     deadline.setFullYear(day.getFullYear());
     deadline.setMonth(day.getMonth());
     deadline.setDate(day.getDate() + 1);
-    console.log(day);
-    console.log(deadline);
+    // console.log(day);
+    // console.log(deadline);
 
     function getTimeReamining (endtime) {
         const t = Date.parse(endtime) - Date.parse(new Date()), // разница между дедлайном и текущем временем //
@@ -106,8 +106,8 @@ document.addEventListener('DOMContentLoaded', () => {
     //Modal
 
     const modalTrigger = document.querySelectorAll('[data-modal]'),
-          modal = document.querySelector('.modal'),
-          modalCloseBtn = document.querySelector('[data-close]');
+          modal = document.querySelector('.modal');
+        //   modalCloseBtn = document.querySelector('[data-close]');
 
     // modalTrigger.forEach(btn => {
     //     btn.addEventListener('click', () => {
@@ -124,7 +124,9 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     function openModal () {
-        modal.classList.toggle('show');
+        // modal.classList.toggle('show');
+        modal.classList.add('show');
+        modal.classList.remove('hide');
         document.body.style.overflow = 'hidden'; // запрещаем скролить страницу //
         clearInterval(modalTimerID); // сбрасываем setTimeout(openModal, 3000) //
     }
@@ -145,7 +147,7 @@ document.addEventListener('DOMContentLoaded', () => {
     //     document.body.style.overflow = ''; // разрешаем скролить страницу //
     // });
 
-    modalCloseBtn.addEventListener('click', closeModal);
+    // modalCloseBtn.addEventListener('click', closeModal);
 
     // modal.addEventListener('click', (e) => {
     //     if (e.target === modal) {
@@ -155,13 +157,15 @@ document.addEventListener('DOMContentLoaded', () => {
     // });
 
     modal.addEventListener('click', (e) => {
-        if (e.target === modal) {
+        if (e.target === modal || e.target.getAttribute('data-close') == '') {
             closeModal();
         }
     });
 
     function closeModal () {
-        modal.classList.toggle('show');
+        modal.classList.add('hide');
+        modal.classList.remove('show');
+        // modal.classList.toggle('show');
         document.body.style.overflow = '';
     }
 
@@ -261,7 +265,152 @@ document.addEventListener('DOMContentLoaded', () => {
         '.menu .container',
         'menu__item',
     ).render();
+    
+    // Forms
 
+    const forms = document.querySelectorAll('form');
+
+    const message = {
+        loading: 'img/form/spinner.svg',
+        success: 'Спасибо! Скоро мы с вами свяжемся',
+        failure: 'Что-то пошло не так...'
+    }
+
+    forms.forEach(item => {
+        postData(item);
+    });
+
+    function postData (form) {
+        form.addEventListener('submit', (e) => {
+            // событие submit срабатывает когда мы пытаемся отправить форму нажатием Enter или кнопки с type="submit 
+            e.preventDefault(); // отменяем стандартное поведение браузера
+
+            const statusMessage = document.createElement('img');
+            // statusMessage.classList.add('status');
+            statusMessage.src = message.loading;
+            // statusMessage.style.cssText = `
+            //     display: block;
+            //     magrin: 0 auto;
+            // `;
+            statusMessage.classList.add('spinner');
+            // form.append(statusMessage);
+            form.insertAdjacentElement('afterend', statusMessage);
+            // insertAdjacentElement('') вставляет элимент на сраницу принимает 2 аргумента
+            // afterend вставляем не в саму форму а после после формы
+            // какой элимент вставляем
+
+            // const request = new XMLHttpRequest();
+            // request.open('POST', 'server.php');
+            // request.setRequestHeader('Content-type', 'multipart/form-data'); // заголовок для FormData
+            // !!!!когда используется FormData и объект XMLHttpRequest() заголовок прописывать не нужно
+
+            // если сервер должен принимать файлы в формате json то заголовок уже нужен
+            // request.setRequestHeader('Content-type', 'application/json; charset=utf-8');
+
+            const formData = new FormData(form); 
+
+            fetch('server.php', {
+                method: 'POST',
+                // headers: { // если отправлять формат json
+                //     'Content-type': 'application/json'
+                // },
+                body: formData
+            }).then(data => {
+                console.log(data); // data то что вернул сервер
+                showThanksModal(message.success);
+                statusMessage.remove();
+            }).catch(() => {
+                showThanksModal(message.failure);
+            }).finally(() => {
+                form.reset();
+            });
+            // FormData() это объект который собирает данные с формы для отправки на сервер в формате ключ - значение
+            // Важно что бы в инпутах формы был указан атрибут name иначе FormData не может найти этот инпут и взять с него value
+
+            // FormData нельзя перегнать одним методом в формат json
+            // передаём все данные с FormData в объект object
+            // const object = {};
+            // formData.forEach(function(value, key) {
+            //     object[key] = value;
+            // });
+
+            // const json = JSON.stringify(object); // переводим обычный объект в формат JSON
+
+            // request.send(formData); // так как POST в метод send передаём аргумент body = formData
+            // request.send(json);
+
+            // request.addEventListener('load', () => {
+            //     if (request.status === 200) {
+            //         console.log(request.response);
+            //         showThanksModal(message.success);
+            //         // statusMessage.textContent = message.success;
+            //         form.reset(); // очищаем форму
+            //         // setTimeout(() => {
+            //         //     statusMessage.remove(); // удаляем сообщение
+            //         // }, 2000);
+            //         statusMessage.remove();
+            //     } else {
+            //         // statusMessage.textContent = message.failure;
+            //         showThanksModal(message.failure);
+            //     }
+            // });
+        });
+    }
+
+    function showThanksModal(message) {
+        const prevModalDialog = document.querySelector('.modal__dialog');
+
+        prevModalDialog.classList.add('hide');
+        openModal();
+
+        const thanksModal = document.createElement('div');
+        thanksModal.classList.add('modal__dialog');
+        thanksModal.innerHTML = `
+        <div class="modal__content">
+            <div class="modal__close" data-close="">×</div>
+            <div class="modal__title">${message}</div>
+        </div>
+        `;
+
+        document.querySelector('.modal').append(thanksModal);
+        setTimeout(() => {
+            thanksModal.remove();
+            prevModalDialog.classList.add('show');
+            prevModalDialog.classList.remove('hide');
+            closeModal();
+        }, 4000);
+    }
+
+    // API Application Programming Interface — «программный интерфейс приложения» готовые методы и свойства
+    // набор данных и возможностей которое предостовляет нам какое то готове решение
+    // DOM API - различные методы которые позволяют нам работать на странице
+    // Fetch API // технология встроенная в браузер которая позволяет общаться с сервером построена на промисах
+
+    // fetch()
+    // можно было бы создать в проекте файл json куда отправлять запросы
+    // jsonplaceholder небольшая база данных в формате json к которой можно обращаться для тестирования своего приложения
+
+    fetch('https://jsonplaceholder.typicode.com/todos/1') 
+    // глобальный метод fetch() который принимает в себя url на который посылается запрос 
+    // если бльше ничего не указывать то это будет GET запрос
+    // метод fetch() промис который обрабатывается при помощи цепочки then
+        .then(response => response.json())
+        // поолучаем ответ response в формате json, для трансформации в обычный объект обычно используется команда JSON.parse
+        // у fetch есть свой метод json() для перевода формата json в обычный объект
+        // response.json() возврощает нам промис с обычным объектом который можно использовать например в консоле
+        .then(json => console.log(json))
+    
+    // для других запросов
+
+    fetch('https://jsonplaceholder.typicode.com/posts', {
+        method: "POST",                         // запрос
+        body: JSON.stringify({name: 'Alex'}),   // то что будем отправлять stringify() переводит объект в формат(JSON)
+        headers: {                              // заголовки во множественном числе
+            'Content-type': 'application/json'
+        }
+    })
+    .then(response => response.json())
+    .then(json => console.log(json))
 });
 
 

@@ -1,0 +1,50 @@
+{
+	"folders": [
+		{
+			"name": "WordPress",
+			"path": "..\\WordPress"
+		},
+		{
+			"name": "kinomonster",
+			"path": "..\\kinomonster"
+		},
+		{
+			"name": "Bootstrap_project",
+			"path": "..\\Bootstrap_project"
+		},
+		{
+			"name": "UBER",
+			"path": "..\\UBER"
+		},
+		{
+			"name": "Project_Sass111",
+			"path": "..\\Project_Sass111"
+		},
+		{
+			"name": "UBER1",
+			"path": "..\\work1\\UBER1"
+		},
+		{
+			"name": "Pulse",
+			"path": "..\\Pulse"
+		},
+		{
+			"name": "preview_grid",
+			"path": "..\\preview_grid"
+		},
+		{
+			"name": "Grid_Example",
+			"path": "..\\Grid_Example"
+		},
+		{
+			"name": "Portfolio",
+			"path": "..\\Portfolio"
+		},
+		{
+			"path": "."
+		}
+	],
+	"settings": {
+		"liveServer.settings.multiRootWorkspaceName": "Udemy JavaScript"
+	}
+}
