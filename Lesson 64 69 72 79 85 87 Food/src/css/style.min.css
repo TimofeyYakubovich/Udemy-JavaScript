@@ -913,4 +913,8 @@ a {
   -webkit-transition: opacity .6s ease;
   transition: opacity .6s ease;
 }
+
+.fs {
+  font-size: 32px;
+}
 /*# sourceMappingURL=style.min.css.map */
