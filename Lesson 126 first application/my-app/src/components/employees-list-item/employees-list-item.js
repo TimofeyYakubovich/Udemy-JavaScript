@@ -49,7 +49,18 @@ import './employees-list-item.css';
         // <li className="list-group-item d-flex justify-content-between">
         <li className={className}>
             {/* <span className="list-group-item-label" onClick={this.onRise}>{name}</span> */}
-            <span className="list-group-item-label" onClick={onToggleProp} data-toggle="rise">{name}</span>
+            <span className="list-group-item-label"
+                onClick={onToggleProp} 
+                data-toggle="rise"
+                // Inline назначаются через атрибут style={} в реакте он принимает в себя объект со стилями
+                // px можно не прописывать реакт подставляет их сам но только пиксели другие значения помещаем в кавычки как строку
+                // это удобно если нам приходит объект с готовыми стилями его так же можно вынести в отдельную переменную
+                // но если использовать тольк оинлайн стили есть одно проблема
+                // вендерные префиксы автоматически подставляться не будут это стили каторые позволяют нрмально отрисовывать 
+                // элимент во всех браузерах
+                // style={{fontSize: 40, color: 'red', transition: 'all', WebkitTransition: 'all', msTransition: 'all'}}
+                // style={{fontSize: '40em'}}
+                >{name}</span>
             <input type="text" className="list-group-item-input" defaultValue={salary + '$'}/>
             <div className="d-flex justify-content-center align-items-center">
                 <button type="button"

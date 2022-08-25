@@ -1,13 +1,33 @@
 import { Component } from 'react';
-import './employees-add-form.css';
+// import './employees-add-form.css';
+import './employees-add-form.scss';
+// в середине 21 года пакет node-sass каторый нужен был для работы препроцессора scss в реакте стал deprecated неподдерживаемый
+// сейчас нужно ставить просто пакет sass
+// останавливаем сборку ctrl c и устанавливаем пакет sass npm   i sass --save
 
 class EmployeesAddForm extends Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            name: '',
-            salary: ''
-        }
+    // синтаксис полей классов (class fields)
+    // одна из возможностей полей классов записывать методы ввиде стрелочной фенкции что бы закрепить за ними контекст вызыва
+    // а не каждый раз биндить методы к экзепляру класса
+    // еще одна возможность полей классов создане свойст state без конструктора и без указания this
+
+    // методы и свойства которые можно использовать без создания класса через new называются статическими
+    // пока что все методы и свойства которые ми использовали внутри копанента статическими не будут 
+    // если вызвать какой нибудь метод EmployeesAddForm.onValueChange() то будет ошибка
+    // вызыв метода EmployeesAddForm.onLog(); пройдёт без ошибки потому то он статичный
+    // так же можно создавать и статичные свойства и использвать их при вызыве класса console.log(EmployeesAddForm.logged)
+
+    // constructor(props) {
+    //     super(props);
+    //     this.state = {
+    //         name: '',
+    //         salary: ''
+    //     }
+    // }
+
+    state = {
+        name: '',
+        salary: ''
     }
 
     onValueChange = (e) => {
@@ -54,6 +74,12 @@ class EmployeesAddForm extends Component {
         })
     }
 
+    static onLog = () => { // static теперь этот метод стал статичным
+        console.log('Hey')
+    }
+
+    static logged = 'on';
+
     render() {
         const {name, salary} = this.state;
 
@@ -83,5 +109,8 @@ class EmployeesAddForm extends Component {
         )
     }
 }
+
+// EmployeesAddForm.onLog();
+// console.log(EmployeesAddForm.logged);
 
 export default EmployeesAddForm;

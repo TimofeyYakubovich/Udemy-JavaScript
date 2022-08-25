@@ -16,7 +16,9 @@ class App extends Component {
                 {name: 'Jonh C.', salary: 800, increase: false, rise: true, id: 1},
                 {name: 'Alex M.', salary: 3000, increase: true, rise: false, id: 2},
                 {name: 'Carl W.', salary: 15000, increase: false, rise: false, id: 3},
-            ]
+            ],
+            term: '', // строка поиска
+            filter: 'all'
         }
         this.maxId = 4;
     }
@@ -64,9 +66,9 @@ class App extends Component {
         })
     }
 
-    addItem = (mame, salary) => {
+    addItem = (name, salary) => {
         const mewItem = {
-            mame,
+            name,
             salary,
             increase: false,
             rise: false, 
@@ -141,21 +143,67 @@ class App extends Component {
         }))
     }
 
+    searchEmp = (items, term) => { // term - строка по которой будем искать items - массив данных который будем фильтровать
+        if (term.length === 0) {
+            return items;
+        }
+
+        return items.filter(item => {
+            return item.name.indexOf(term) > -1
+        }) // берем свойство name из каждого объекта и ищем совпадение со строкой term
+    }      // indexOf метод для строки который позволяет искать подстроки (кусочки строки) если он ничего не находит он возвращает -1
+           // поэтому пишим условие > -1
+           // фильтруем и возвращаем только те элименты которые проходят проверку берем name у каждого объекта и ищем совпадение 
+           // name с кусочком строки term который приходит в метод если ничего не найдено вернется -1 и условие не выполнится
+           // если найдено то вернется индекс объекта в котором была найдена эта подстрока
+           // таким образом вернется массив тех объектов которые подходят под поиск
+
+    onUpdataSearch = (term) => { // этот метод будет просто устанавливать состояние term
+        // this.setState({term: term}) // можно сократить и записать 
+        this.setState({term})
+    }
+
+    filterPost = (items, filter) => {
+        switch (filter) {
+            case 'rise':
+                // return items.filter(item => if (item.rise) return) можно кароче
+                return items.filter(item => item.rise) // вернуться только те объекты у которых rise стоит true
+                // break можно не прописовать реакт и так знает что нодо закончить проверку
+            case 'moreThen1000':
+                return items.filter(item => item.salary > 1000)
+            default: // если нет ниодного из фильтров
+                return items
+
+
+        }
+    }
+
+    onFilterSelect = (filter) => {
+        this.setState({filter})
+    }
+
     render() {
+        const {data, term, filter} = this.state;
         const employees = this.state.data.length;
         const increased = this.state.data.filter(item => item.increase).length;
         // перебираем объект data и возвращаем только те айтемы у которых increase будет в позиции true и берём их количество
+        const visibleData = this.filterPost(this.searchEmp(data, term), filter);
+        // теперь передаём visibleData в EmployeesList вместо просто data что бы перед тем как отброзить сотрудников на странице
+        // отфильтровать их через метод searchEmp
+        // при вызове filterPost помещаем в него вместо data сразу this.searchEmp(data, term) что бы в него приходил отфильтрованный массив
+        // таким образом в visibleData помещается массив отфильтрованный по поиску инпута потом по фильтрам кнопкам
         return (
             <div className='app'>
                 <AppInfo employees={employees} increased={increased}/>
     
                 <div className="search-panel">
-                    <SearchPanel/>
-                    <AppFilter/>
+                    <SearchPanel onUpdataSearch={this.onUpdataSearch}/>
+                    <AppFilter filter={filter} onFilterSelect={this.onFilterSelect}/>
                 </div>
     
                 <EmployeesList 
-                    data={this.state.data}
+                    // data={data}
+                    data={visibleData}
                     // onDelete={id => console.log(id)}/> 
                     onDelete={this.deleteItem}
                     // onToggleIncrease={this.onToggleIncrease}
