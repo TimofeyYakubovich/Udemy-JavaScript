@@ -13,7 +13,7 @@ import './App.css';
 //     console.log('fetching')
 //     return [
 //         "https://www.planetware.com/wpimages/2020/02/france-in-pictures-beautiful-places-to-photograph-eiffel-tower.jpg",
-//         "https://klike.net/uploads/posts/2019-05/1556708032_1.jpg"
+//         "https://klike.net/uploads  /posts/2019-05/1556708032_1.jpg"
 //     ]
 // }
 
